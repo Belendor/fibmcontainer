@@ -18,8 +18,20 @@ after_success:
   # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Take those images and push them to docker hub
-  
+
   - docker push belendor/multi-client
   - docker push belendor/multi-nginx
   - docker push belendor/multi-server
   - docker push belendor/multi-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: 'eu-central-1'
+  app: 'multi'
+  env: 'Multi-env'
+  bucket_name: 'elasticbeanstalk-eu-central-1-711635244477'
+  bucket_path: 'docker-multi'
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
